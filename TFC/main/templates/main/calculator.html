@@ -5,6 +5,58 @@
 {% endblock %}
 
 {% block content %}
-	<h1>Калькулятор походной раскладки еды</h1>
-	<p>Здесь вы можете рассчитать свою походную раскладку</p>
+	<div class="container-fluid text-center">
+		<h1>Калькулятор походной раскладки еды</h1>
+		<p>Здесь вы можете рассчитать свою походную раскладку</p>
+	</div>
+
+	<div class="offset-lg-3 col-lg-6 col-md-6">
+		<form action="" method="POST">
+			{% csrf_token %}
+			<div class="row-6">
+				{{form.title.label}}
+				{{form.title}}
+			</div>
+			<div class="row-6">
+				{{form.number_of_persons.label}}
+				{{form.number_of_persons}}
+			</div>
+			<div class="row-6">
+				{{form.number_of_days.label}}
+				{{form.number_of_days}}
+			</div>
+			<div class="row-12">
+				{{form.calories_per_day.label}}
+				{{form.calories_per_day}}
+			</div>
+		</form>
+	</div>
+	<div class="container-sm">
+		<table class="table table-bordered table-hover" align="right">
+			<thead>
+				<tr>
+					<th class="table-warning">
+						Название продукта
+					</th>
+					<th class="table-warning">
+						Порция
+					</th>
+					<th class="table-warning">
+						Калорийность на 100г.
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for el in products %}
+					<tr>
+						<td>{{ el.name }}</td>
+						<td>{{ el.weight }}</td>
+						<td>{{ el.calories }}</td>
+						<td><button class="btn btn-danger">Добавить</button></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
 {% endblock %}
