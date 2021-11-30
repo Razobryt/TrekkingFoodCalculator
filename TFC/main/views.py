@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
-from .models import Product
-from .forms import CreateUserForm, Hike
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from .models import Product, Cart, Customer, CartProduct
+from .forms import CreateUserForm, Hike
 
 
 def index(request):
@@ -17,19 +17,24 @@ def about(request):
 
 def calculator(request):
 	form = Hike()
-	table = Product.objects.all()
+	products = Product.objects.all()
+	cart = Cart(request)
 
 	if request.method == 'POST':
 		form = Hike(request.POST)
 		if form.is_valid():
 			form.save()
 			return render(request, 'main/calculator.html')
-	context = {'form': form, 'products': table}
+	context = {'form': form, 'products': products, 'cart': cart}
 	return render(request, 'main/calculator.html', context)
 
 
-def new(request):
-	return render(request, 'main/new.html')
+@login_required(login_url='login')
+def cart_add(request):
+	cart = Cart(request)
+	product = get_object_or_404(Product, id='product_id')
+	cart.add(products=product)
+	return redirect('cart:calculator')
 
 
 def log_in_user(request):

@@ -1,17 +1,21 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 User = get_user_model()
 
 
 class Product(models.Model):
-	name = models.CharField(max_length=255, verbose_name='Название продукта')
+	product_id = models.IntegerField(primary_key=True, unique=True, db_index=True)
+	title = models.CharField(max_length=255, db_index=True, verbose_name='Название продукта')
+	slug = models.SlugField(max_length=200, unique=True, db_index=True)
 	weight = models.PositiveIntegerField(default=100, blank=False, verbose_name='Порция')
 	calories = models.PositiveIntegerField(default=2500, blank=False, verbose_name='Калорийность в 100г')
 
 	def __str__(self):
-		return self.name
+		return self.title
 
 
 class Customer(models.Model):
@@ -25,11 +29,11 @@ class CartProduct(models.Model):
 	user = models.ForeignKey(Customer, verbose_name='Пользователь', on_delete=models.CASCADE)
 	cart = models.ForeignKey('Cart', verbose_name='Корзина', on_delete=models.CASCADE, related_name='related_products')
 	product = models.ForeignKey(Product, verbose_name='Продукт', on_delete=models.CASCADE)
-	product_weight = models.PositiveIntegerField(verbose_name='Вес продукта')
-	product_calories = models.PositiveIntegerField(verbose_name='Калорийность продукта')
+	max_weight = models.PositiveIntegerField(verbose_name='Вес раскладки')
+	max_calories = models.PositiveIntegerField(verbose_name='Получено калорий')
 
 	def __str__(self):
-		return 'Продукт: {} '.format(self.product.name)
+		return 'Продукт: {} '.format(self.product.title)
 
 
 class Cart(models.Model):
