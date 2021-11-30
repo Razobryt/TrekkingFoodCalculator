@@ -1,14 +1,12 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 User = get_user_model()
 
 
 class Product(models.Model):
-	product_id = models.IntegerField(primary_key=True, unique=True, db_index=True)
+	product_id = models.AutoField(primary_key=True)
 	title = models.CharField(max_length=255, db_index=True, verbose_name='Название продукта')
 	slug = models.SlugField(max_length=200, unique=True, db_index=True)
 	weight = models.PositiveIntegerField(default=100, blank=False, verbose_name='Порция')

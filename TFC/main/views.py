@@ -19,21 +19,24 @@ def calculator(request):
 	form = Hike()
 	products = Product.objects.all()
 	cart = Cart(request)
-
 	if request.method == 'POST':
 		form = Hike(request.POST)
 		if form.is_valid():
 			form.save()
 			return render(request, 'main/calculator.html')
-	context = {'form': form, 'products': products, 'cart': cart}
+	context = {'form': form, 'products': products}     # здесь ещё нужно добавить 'cart': cart
 	return render(request, 'main/calculator.html', context)
 
 
 @login_required(login_url='login')
 def cart_add(request):
-	cart = Cart(request)
-	product = get_object_or_404(Product, id='product_id')
-	cart.add(products=product)
+	customer = Customer.objects.get(user=request.user)
+	cart = Cart.objects.get(owner=customer)
+	product = Product.objects.get(id=request.product_id)
+	cart_product = CartProduct.objects.create(
+		user=cart.owner, cart=cart, product=product
+		)
+	cart.products.add(cart_product)
 	return redirect('cart:calculator')
 
 

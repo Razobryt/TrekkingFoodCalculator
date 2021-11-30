@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Customer, CartProduct, Cart, User
+from .models import Product, Customer, CartProduct, Cart
 
 
 class AdminUser(admin.ModelAdmin):
