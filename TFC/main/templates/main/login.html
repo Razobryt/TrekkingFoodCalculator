@@ -1,15 +1,32 @@
-{% extends "main/base.html" %}
+{% extends 'main/base.html' %}
 {% block content %}
 <div class="offset-lg-3 col-lg-4 col-md-6">
     <div class="course-form-section">
         <h3>Войти</h3>
         <form class="course-form-area contact-page-form course-form text-right" id="myForm" action="{% url 'login' %}" method="POST">
             {% csrf_token %}
+            {% if form.non_field_errors %}
             <div class="form-group col-md-12">
-                <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username" placeholder="Имя пользователя.." class=" form-control">
+                {{ form.non_field_errors }}
             </div>
+            {% endif %}
+            {% if form.username.errors %}
             <div class="form-group col-md-12">
-                <input type="text" name="password" maxlength="150" autofocus="" required="" id="id_password" placeholder="Пароль.." class=" form-control">
+                {{ form.username.errors }}
+            </div>
+            {% endif %}
+            <div class="form-group col-md-12">
+                {{ form.username.label }}
+                {{ form.username }}
+            </div>
+            {% if form.password.errors %}
+            <div class="form-group col-md-12">
+                {{ form.password.errors }}
+            </div>
+            {% endif %}
+            <div class="form-group col-md-12">
+                {{ form.password.label }}
+                {{ form.password }}
             </div>
             <div class="col-lg-12 text-center">
                 <button class="btn text-uppercase btn-success">Войти</button>

@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Product, Cart, Customer, CartProduct
-from .forms import CreateUserForm, Hike
+from .models import Product, Cart, CartProduct, User
+from .forms import SignInForm, LogInForm, HikeForm, CartForm
 
 
 def index(request):
@@ -16,34 +16,35 @@ def about(request):
 
 
 def calculator(request):
-	form = Hike()
+	form = HikeForm()
 	products = Product.objects.all()
-	cart = Cart(request)
+	cart = CartForm(request.POST, )
 	if request.method == 'POST':
-		form = Hike(request.POST)
+		form = HikeForm(request.POST)
 		if form.is_valid():
 			form.save()
 			return render(request, 'main/calculator.html')
-	context = {'form': form, 'products': products}     # здесь ещё нужно добавить 'cart': cart
+	context = {'form': form, 'products': products, 'cart': cart}
 	return render(request, 'main/calculator.html', context)
 
 
 @login_required(login_url='login')
 def cart_add(request):
-	customer = Customer.objects.get(user=request.user)
-	cart = Cart.objects.get(owner=customer)
+	user = User.objects.get(user=request.user)
+	cart = Cart.objects.get(owner=user)
 	product = Product.objects.get(id=request.product_id)
 	cart_product = CartProduct.objects.create(
-		user=cart.owner, cart=cart, product=product
+		user=user, cart=cart, product=product
 		)
 	cart.products.add(cart_product)
-	return redirect('cart:calculator')
+	return render(request, 'main/calculator.html')
 
 
 def log_in_user(request):
 	if request.user.is_authenticated:
 		return redirect('home')
 	else:
+		form = LogInForm()
 		if request.method == 'POST':
 			username = request.POST.get('username')
 			password = request.POST.get('password')
@@ -53,7 +54,8 @@ def log_in_user(request):
 				return redirect('home')
 			else:
 				messages.info(request, 'Имя пользователя или пароль не верны')
-		return render(request, 'main/login.html')
+		context = {'form': form}
+		return render(request, 'main/login.html', context)
 
 
 @login_required(login_url='login')
@@ -66,7 +68,7 @@ def signin_user(request):
 	if request.user.is_authenticated:
 		return redirect('home')
 	else:
-		form = CreateUserForm()
+		form = SignInForm()
 
 		if request.method == 'POST':
 			form = UserCreationForm(request.POST)
@@ -75,6 +77,12 @@ def signin_user(request):
 				user = form.cleaned_data.get('username')
 				messages.success(request, f'{user} был успешно создан')
 				return redirect('login')
+			else:
+				messages.error(request, )
 
 		context = {'form': form}
 		return render(request, 'main/sign_in.html', context)
+
+
+def userprofile(request):
+	return render(request, 'main/userprofile.html')

@@ -7,40 +7,44 @@
             {% csrf_token %}
             {% if form.non_field_errors %}
             <div class="form-group col-md-12">
-                {{form.non_field_errors}}
+                {{ form.non_field_errors }}
             </div>
             {% endif %}
             {% if form.username.errors %}
             <div class="form-group col-md-12">
-                {{form.username.errors}}
+                {{ form.username.errors }}
             </div>
             {% endif %}
             <div class="form-group col-md-12">
-                {{form.username}}
+                {{ form.username.label }}
+                {{ form.username }}
             </div>
             {% if form.email.errors %}
             <div class="form-group col-md-12">
-                {{form.email.errors}}
+                {{ form.email.errors }}
             </div>
             {% endif %}
             <div class="form-group col-md-12">
-                {{form.email}}
+                {{ form.email.label }}
+                {{ form.email }}
             </div>
-            {% if form.password1.errors %}
+            {% if form.password.errors %}
             <div class="form-group col-md-12">
-                {{form.password.errors}}
-            </div>
-            {% endif %}
-            <div class="form-group col-md-12">
-                {{form.password1}}
-            </div>
-            {% if form.password2.errors %}
-            <div class="form-group col-md-12">
-                {{ form.password2.errors }}
+                {{ form.password.errors }}
             </div>
             {% endif %}
             <div class="form-group col-md-12">
-                {{form.password2}}
+                {{ form.password.label }}
+                {{ form.password }}
+            </div>
+            {% if signin_form.repeat_password.errors %}
+            <div class="form-group col-md-12">
+                {{ form.repeat_password.errors }}
+            </div>
+            {% endif %}
+            <div class="form-group col-md-12">
+                {{ form.repeat_password.label }}
+                {{ form.repeat_password }}
             </div>
             <div class="col-lg-12 text-center">
                 <button class="btn text-uppercase btn-success">Регистрация</button>

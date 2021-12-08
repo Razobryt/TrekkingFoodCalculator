@@ -32,7 +32,7 @@
 					<a type="button" href="{% url 'login' %}" class="btn btn-outline-light me-2">Войти</a>
 					<a type="button" href="{% url 'signin' %}" class="btn btn-warning">Регистрация</a>
 					{% else %}
-					<a class="user_msg" href="/admin/">{{user.username}}</a>
+					<a class="user_msg" href="{% url 'userprofile' %}">{{user.username}}</a>
 					<a type="button" href="{% url 'logout' %}" class="btn btn-warning">Выйти</a>
 					{% endif %}
 				</div>
